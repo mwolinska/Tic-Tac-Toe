@@ -1,7 +1,9 @@
 from typing import List
 
+import numpy as np
 
-def continue_game(board) -> bool:
+
+def continue_game(board, player_number) -> bool:
 
     for i in range(3):
         # is there a win in each row?
@@ -25,11 +27,15 @@ def change_player(player_number):
 def play_move(board: List[List], player_number):
     row = int(input("Play position row: "))
     column = int(input("Play position column: "))
-    if board[row][column] == 0:
+    if is_position_available(board, row, column):
         board[row][column] = player_number
-        continue_to_next_move = continue_game(board)
-
+        continue_to_next_move = continue_game(board, player_number)
         return board, continue_to_next_move
     else:
-        print("Position is already taken, pick another one")
-        play_move(board, player_number)
+        return play_move(board, player_number)
+
+
+def is_position_available(board: np.ndarray, row: int, column: int) -> bool:
+    if row > 2 or column > 2:
+        print("Position doesn't exist, pick another one")
+        return False

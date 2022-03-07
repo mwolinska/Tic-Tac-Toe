@@ -23,4 +23,3 @@ def create_game() -> Tuple[List[List], int]:
     # 1 is cross, 2 is naught
     starting_number = randint(1, 2)
     return clean_board, starting_number
-
