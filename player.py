@@ -24,9 +24,13 @@ def change_player(player_number):
         new_player_number = None
     return new_player_number
 
-def play_move(board: List[List], player_number):
+def get_move():
     row = int(input("Play position row: "))
     column = int(input("Play position column: "))
+    return row, column
+
+def play_move(board: List[List], player_number):
+    row, column = get_move()
     if is_position_available(board, row, column):
         board[row][column] = player_number
         continue_to_next_move = continue_game(board, player_number)

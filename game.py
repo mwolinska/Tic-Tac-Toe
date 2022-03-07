@@ -15,7 +15,7 @@ def play_game():
         game_board, play_next_move = play_move(game_board, player)
         player = change_player(player)
         print(game_board)
-    print("Player" + str(change_player(player)) + "won the game")
+    print("Player " + str(change_player(player)) + " won the game")
 
 def create_game() -> Tuple[List[List], int]:
     clean_board = np.array([[0, 0, 0], [0, 0, 0], [0, 0, 0]])
