@@ -1,17 +1,28 @@
 from typing import List
-
 import numpy as np
 
-
 def continue_game(board, player_number) -> bool:
+    is_win_mask = board == player_number
 
     for i in range(3):
         # is there a win in each row?
-        if board[i][0] == board[i][1] and board[i][1] == board[i][2] and board[i][0] != 0:
+        if np.all(is_win_mask[:, i]):
+            print("Player " + str(player_number) + " has won the game")
             return False
         # is there a win in each column?
-        elif board[0][i] == board[1][i] and board[1][i] == board[2][i] and board[0][i] != 0:
+        elif np.all(is_win_mask[i, :]):
+            print("Player " + str(player_number) + " has won the game")
             return False
+    # Check if there is a win across the diagonals
+    if is_win_mask[0][0] == is_win_mask[1][1] == is_win_mask[2][2] == True:
+        return False
+    elif is_win_mask[2][0] == is_win_mask[1][1] == is_win_mask[0][2] == True:
+        return False
+
+    # Check if this game ends in a draw
+    if sum(list_available_positions(board)) == 0:
+        print("The game is over, this is a draw")
+        return False
 
     return True
 
