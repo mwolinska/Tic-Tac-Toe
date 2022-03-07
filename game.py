@@ -7,10 +7,7 @@ from player import play_move, change_player
 
 def play_game():
     game_board, player = create_game()
-    game_board, play_next_move = play_move(game_board, player)
-    print(game_board)
-    player = change_player(player)
-
+    play_next_move = True
     while play_next_move:
         game_board, play_next_move = play_move(game_board, player)
         player = change_player(player)

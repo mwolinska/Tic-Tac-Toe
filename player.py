@@ -30,13 +30,14 @@ def get_move():
     return row, column
 
 def play_move(board: List[List], player_number):
-    row, column = get_move()
-    if is_position_available(board, row, column):
-        board[row][column] = player_number
-        continue_to_next_move = continue_game(board, player_number)
-        return board, continue_to_next_move
-    else:
-        return play_move(board, player_number)
+    is_move_possible = False
+    while not is_move_possible:
+        row, column = get_move()
+        is_move_possible = is_position_available(board, row, column)
+
+    board[row][column] = player_number
+    play_next_move = continue_game(board, player_number)
+    return board, play_next_move
 
 def list_available_positions(board: np.ndarray) -> List[bool]:
     avail_positions = []
