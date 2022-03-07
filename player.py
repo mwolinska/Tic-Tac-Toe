@@ -19,6 +19,11 @@ def continue_game(board, player_number) -> bool:
     elif is_win_mask[2][0] == is_win_mask[1][1] == is_win_mask[0][2] == True:
         return False
 
+    # Check if this game ends in a draw
+    if sum(list_available_positions(board)) == 0:
+        print("The game is over, this is a draw")
+        return False
+
     return True
 
 def change_player(player_number):
