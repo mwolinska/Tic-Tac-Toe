@@ -1,7 +1,12 @@
+from typing import Optional, Tuple
+
 import pygame
+from pygame import event
+
 
 class GameWindow(object):
     def __init__(self, width: int = 600, height: int = 600):
+        self.y_position_grid_centre = None
         pygame.init()
 
         self.width = width
@@ -13,6 +18,8 @@ class GameWindow(object):
         self.vertical_lines = None
         self.horizontal_lines = None
         self.x_position_grid_centre = None
+        self.x_symbol_centre = None
+        self.y_symbol_centre = None
 
     def prepare_board(self):
         self.screen.fill((234, 228, 233))
@@ -43,7 +50,7 @@ class GameWindow(object):
     def print_starting_player(self, player_number):
         pass
 
-    def get_user_interaction(self, player_number: int, play_next_move: int):
+    def get_user_interaction(self):
         running = True
         while running:
 
@@ -61,42 +68,43 @@ class GameWindow(object):
                         print(event.key)
 
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.pos[0] < self.vertical_lines[0]:
-                        column = 0
-                        x_symbol_centre = self.vertical_lines[0] - self.x_position_grid_centre
+                    return event.pos[0], event.pos[1]
 
-                    elif self.vertical_lines[0] < event.pos[0] < self.vertical_lines[1]:
-                        column = 1
-                        x_symbol_centre = self.vertical_lines[1] - self.x_position_grid_centre
-                    else:
-                        column = 2
-                        x_symbol_centre = self.vertical_lines[1] + self.x_position_grid_centre
+    def get_move_location(self, click_x, click_y) -> Tuple[int, int]:
 
-                    if event.pos[1] < self.horizontal_lines[0]:
-                        row = 0
-                        y_symbol_centre = self.horizontal_lines[0] - self.y_position_grid_centre
-                    elif self.horizontal_lines[0] < event.pos[1] < self.horizontal_lines[1]:
-                        row = 1
-                        y_symbol_centre = self.horizontal_lines[1] - self.y_position_grid_centre
-                    else:
-                        row = 2
-                        y_symbol_centre = self.horizontal_lines[1] + self.y_position_grid_centre
+        if click_x < self.vertical_lines[0]:
+            column = 0
+            self.x_symbol_centre = self.vertical_lines[0] - self.x_position_grid_centre
 
-                    if player_number == 1:
-                        self.draw_cross(x_symbol_centre, y_symbol_centre)
-                    elif player_number == 2:
-                        pygame.draw.circle(self.screen,
-                                           (242, 132, 130),
-                                           (x_symbol_centre, y_symbol_centre),
-                                           self.symbol_size,
-                                           5)
-                    pygame.display.flip()
-                    return row, column
-            if play_next_move != -1:
-                self.game_outcome(play_next_move)
+        elif self.vertical_lines[0] < click_x < self.vertical_lines[1]:
+            column = 1
+            self.x_symbol_centre = self.vertical_lines[1] - self.x_position_grid_centre
+        else:
+            column = 2
+            self.x_symbol_centre = self.vertical_lines[1] + self.x_position_grid_centre
 
-    def kill(self):
-        pygame.quit()
+        if click_y < self.horizontal_lines[0]:
+            row = 0
+            self.y_symbol_centre = self.horizontal_lines[0] - self.y_position_grid_centre
+        elif self.horizontal_lines[0] < click_y < self.horizontal_lines[1]:
+            row = 1
+            self.y_symbol_centre = self.horizontal_lines[1] - self.y_position_grid_centre
+        else:
+            row = 2
+            self.y_symbol_centre = self.horizontal_lines[1] + self.y_position_grid_centre
+
+        return row, column
+
+    def draw_symbol(self, player_number):
+        if player_number == 1:
+            self.draw_cross(self.x_symbol_centre, self.y_symbol_centre)
+        elif player_number == 2:
+            pygame.draw.circle(self.screen,
+                               (242, 132, 130),
+                               (self.x_symbol_centre, self.y_symbol_centre),
+                               self.symbol_size,
+                               5)
+        pygame.display.flip()
 
     def draw_cross(self, x, y):
         cross_radius = 0.2 * self.width / 3
@@ -110,8 +118,7 @@ class GameWindow(object):
                          (x - cross_radius, y + cross_radius), (x + cross_radius, y - cross_radius),
                          5)
 
-    def game_outcome(self, outcome):
-        # 0 is draw; 1 or 2 is the win
+    def game_outcome(self, outcome_string: str):
         running = True
         while running:
             for event in pygame.event.get():
@@ -119,7 +126,7 @@ class GameWindow(object):
                     running = False
                     pygame.quit()
             my_font = pygame.font.SysFont("menlo", 36)
-            text_img = my_font.render("Player "+ str(outcome) + " has won", True, (0, 0, 0))
+            text_img = my_font.render(outcome_string, True, (0, 0, 0))
             rect_placement_adjust = 0.1 * self.height
             pygame.draw.rect(self.screen,
                              (245, 202, 195),
@@ -127,7 +134,6 @@ class GameWindow(object):
                              0)
             self.screen.blit(text_img, ((self.width - text_img.get_size()[0])/2,  (self.height - text_img.get_size()[1])/2))
             pygame.display.flip()
-
 
     def connect_winning_points(self):
         pass

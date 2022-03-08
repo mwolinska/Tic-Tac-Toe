@@ -1,30 +1,7 @@
-from typing import List
+from typing import List, Tuple
 import numpy as np
 
-def continue_game(board, player_number) -> bool:
-    is_win_mask = board == player_number
-
-    for i in range(3):
-        # is there a win in each row?
-        if np.all(is_win_mask[:, i]):
-            print("Player " + str(player_number) + " has won the game")
-            return False
-        # is there a win in each column?
-        elif np.all(is_win_mask[i, :]):
-            print("Player " + str(player_number) + " has won the game")
-            return False
-    # Check if there is a win across the diagonals
-    if is_win_mask[0][0] == is_win_mask[1][1] == is_win_mask[2][2] == True:
-        return False
-    elif is_win_mask[2][0] == is_win_mask[1][1] == is_win_mask[0][2] == True:
-        return False
-
-    # Check if this game ends in a draw
-    if sum(list_available_positions(board)) == 0:
-        print("The game is over, this is a draw")
-        return False
-
-    return True
+from utils import is_position_available
 
 def change_player(player_number):
     if player_number == 1:
@@ -35,38 +12,14 @@ def change_player(player_number):
         new_player_number = None
     return new_player_number
 
-def get_move():
-    row = int(input("Play position row: "))
-    column = int(input("Play position column: "))
-    return row, column
-
-def play_move(board: List[List], player_number):
+def play_move(game_interface, board: np.ndarray, player_number):
     is_move_possible = False
+    row, column = None, None
     while not is_move_possible:
-        row, column = get_move()
+        x_click, y_click = game_interface.get_user_interaction()
+        row, column = game_interface.get_move_location(x_click, y_click)
         is_move_possible = is_position_available(board, row, column)
 
+    game_interface.draw_symbol(player_number)
     board[row][column] = player_number
-    play_next_move = continue_game(board, player_number)
-    return board, play_next_move
-
-def list_available_positions(board: np.ndarray) -> List[bool]:
-    avail_positions = []
-    current_board = board.flatten()
-    for el in current_board:
-        if el == 0:
-            avail_positions.append(True)
-        else:
-            avail_positions.append(False)
-    return avail_positions
-
-def is_position_available(board: np.ndarray, row: int, column: int) -> bool:
-    available_positions = list_available_positions(board)
-    position_index = row * 3 + column
-    if row > 2 or column > 2:
-        print("Position doesn't exist, pick another one")
-        return False
-
-    if not available_positions[position_index]:
-        print("Position is not available, try another one")
-    return available_positions[position_index]
+    return board
