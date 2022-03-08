@@ -42,9 +42,7 @@ def is_game_draw(board):
     else:
         return False
 
-
 def is_game_over(board, player_number) -> Tuple[bool, str]:
-    outcome_string = None
 
     if has_player_won(board, player_number):
         outcome_string = "Player " + str(player_number) + " won the game"
@@ -58,21 +56,24 @@ def is_game_over(board, player_number) -> Tuple[bool, str]:
             return False, outcome_string
 
 def play_game():
-    game_board, player = create_game()
     game_visual = GameWindow()
-    game_visual.prepare_board()
+    continue_playing = True
 
-    is_over = False
-    outcome = None
-    while not is_over:
+    while continue_playing:
+        game_board, player = create_game()
+        game_visual.prepare_board()
+        game_visual.print_starting_player(player)
 
-        game_board = play_move(game_visual, game_board, player)
-        is_over, outcome = is_game_over(game_board, player)
+        is_over = False
+        outcome = None
+        while not is_over:
 
-        player = change_player(player)
-        print(game_board)
-        print(outcome)
+            game_board = play_move(game_visual, game_board, player)
+            is_over, outcome = is_game_over(game_board, player)
+            player = change_player(player)
 
-    game_visual.game_outcome(outcome)
+        game_visual.game_outcome(outcome)
+        continue_playing = game_visual.play_again()
+
 
 

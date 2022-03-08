@@ -1,7 +1,7 @@
 from typing import Optional, Tuple
 
 import pygame
-from pygame import event
+# from pygame import event
 
 
 class GameWindow(object):
@@ -48,7 +48,31 @@ class GameWindow(object):
         pygame.display.flip()
 
     def print_starting_player(self, player_number):
-        pass
+        welcome_string = "Player " + str(player_number) + " will start the game"
+        my_font = pygame.font.SysFont("menlo", 30)
+        text_img = my_font.render(welcome_string, True, (0, 0, 0))
+        rect_placement_adjust = 0.1 * self.height
+        pygame.draw.rect(self.screen,
+                         (245, 202, 195),
+                         (0, self.height / 2 - rect_placement_adjust, self.width, rect_placement_adjust * 2),
+                         0)
+        self.screen.blit(text_img,
+                         ((self.width - text_img.get_size()[0]) / 2, (self.height - text_img.get_size()[1]) / 2))
+        pygame.display.flip()
+        running = True
+        while running:
+
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    running = False
+                    self.prepare_board()
+                elif event.type == pygame.QUIT:
+                    running = False
+                    pygame.quit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == 27:
+                        running = False
+                        pygame.quit()
 
     def get_user_interaction(self):
         running = True
@@ -121,11 +145,7 @@ class GameWindow(object):
     def game_outcome(self, outcome_string: str):
         running = True
         while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-                    pygame.quit()
-            my_font = pygame.font.SysFont("menlo", 36)
+            my_font = pygame.font.SysFont("menlo", 30)
             text_img = my_font.render(outcome_string, True, (0, 0, 0))
             rect_placement_adjust = 0.1 * self.height
             pygame.draw.rect(self.screen,
@@ -134,6 +154,13 @@ class GameWindow(object):
                              0)
             self.screen.blit(text_img, ((self.width - text_img.get_size()[0])/2,  (self.height - text_img.get_size()[1])/2))
             pygame.display.flip()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                    pygame.quit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    running = False
+                    self.play_again()
 
     def connect_winning_points(self):
         pass
@@ -154,6 +181,39 @@ class GameWindow(object):
                              0)
             self.screen.blit(text_img, ((self.width - text_img.get_size()[0])/2,  (self.height - text_img.get_size()[1])/2))
             pygame.display.flip()
+
+    def play_again(self):
+        exit_event = None
+        running = True
+        while running:
+            check_string = "Do you want to play again? Press y or n"
+            my_font = pygame.font.SysFont("menlo", 24)
+            text_img = my_font.render(check_string, True, (0, 0, 0))
+            rect_placement_adjust = 0.1 * self.height
+            pygame.draw.rect(self.screen,
+                             (245, 202, 195),
+                             (0, self.height / 2 - rect_placement_adjust, self.width, rect_placement_adjust * 2),
+                             0)
+            self.screen.blit(text_img,
+                             ((self.width - text_img.get_size()[0]) / 2, (self.height - text_img.get_size()[1]) / 2))
+            pygame.display.flip()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                    pygame.quit()
+                elif event.type == pygame.KEYDOWN:
+                    if (event.key == pygame.K_y) or (event.key == pygame.K_n):
+                        exit_event = event
+                        running = False
+
+        if exit_event.key == pygame.K_y:
+            self.prepare_board()
+            return True
+
+        elif exit_event.key == pygame.K_n:
+            pygame.quit()
+            return False
+
 
 
 if __name__ == '__main__':
