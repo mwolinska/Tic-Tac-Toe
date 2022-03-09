@@ -4,9 +4,9 @@ from random import randint
 import numpy as np
 from typing import Tuple
 
-from board import GameBoard
-from game_interface import GameWindow
-from player import Player
+from TicTacToe.board import GameBoard
+from TicTacToe.game_interface import GameWindow
+from TicTacToe.player import Player
 
 class TicTacToe(object):
     def __init__(self, number_of_human_players: int = 2, number_of_random_players: int = 0):
@@ -101,8 +101,3 @@ class TicTacToe(object):
 
             game_visual.game_outcome(outcome)
             continue_playing = game_visual.play_again()
-
-
-if __name__ == '__main__':
-    my_game = TicTacToe(1, 1)
-    my_game.play_game()
