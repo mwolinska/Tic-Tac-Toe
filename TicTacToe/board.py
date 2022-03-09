@@ -3,8 +3,8 @@ from typing import List
 
 import numpy as np
 
-from game_interface import GameWindow
-from player import Player
+from TicTacToe.game_interface import GameWindow
+from TicTacToe.player import Player
 
 
 class GameBoard(object):
