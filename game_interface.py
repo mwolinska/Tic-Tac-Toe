@@ -1,8 +1,6 @@
 from typing import Optional, Tuple
 
 import pygame
-# from pygame import event
-
 
 class GameWindow(object):
     def __init__(self, width: int = 600, height: int = 600):
@@ -98,26 +96,35 @@ class GameWindow(object):
 
         if click_x < self.vertical_lines[0]:
             column = 0
-            self.x_symbol_centre = self.vertical_lines[0] - self.x_position_grid_centre
 
         elif self.vertical_lines[0] < click_x < self.vertical_lines[1]:
             column = 1
-            self.x_symbol_centre = self.vertical_lines[1] - self.x_position_grid_centre
         else:
             column = 2
-            self.x_symbol_centre = self.vertical_lines[1] + self.x_position_grid_centre
 
         if click_y < self.horizontal_lines[0]:
             row = 0
-            self.y_symbol_centre = self.horizontal_lines[0] - self.y_position_grid_centre
         elif self.horizontal_lines[0] < click_y < self.horizontal_lines[1]:
             row = 1
-            self.y_symbol_centre = self.horizontal_lines[1] - self.y_position_grid_centre
         else:
             row = 2
-            self.y_symbol_centre = self.horizontal_lines[1] + self.y_position_grid_centre
 
         return row, column
+
+    def get_symbol_coordinates(self, row, column):
+        if column == 0:
+            self.x_symbol_centre = self.vertical_lines[0] - self.x_position_grid_centre
+        elif column == 1:
+            self.x_symbol_centre = self.vertical_lines[1] - self.x_position_grid_centre
+        elif column == 2:
+            self.x_symbol_centre = self.vertical_lines[1] + self.x_position_grid_centre
+
+        if row == 0:
+            self.y_symbol_centre = self.horizontal_lines[0] - self.y_position_grid_centre
+        elif row == 1:
+            self.y_symbol_centre = self.horizontal_lines[1] - self.y_position_grid_centre
+        elif row == 2:
+            self.y_symbol_centre = self.horizontal_lines[1] + self.y_position_grid_centre
 
     def draw_symbol(self, player_number):
         if player_number == 1:
@@ -213,8 +220,6 @@ class GameWindow(object):
         elif exit_event.key == pygame.K_n:
             pygame.quit()
             return False
-
-
 
 if __name__ == '__main__':
     game_window = GameWindow(800, 800)
