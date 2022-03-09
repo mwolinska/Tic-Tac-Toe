@@ -1,3 +1,4 @@
+import random
 from typing import List
 
 import numpy as np
@@ -31,14 +32,37 @@ class GameBoard(object):
             print("Position is not available, try another one")
         return available_positions[position_index]
 
+    def select_random_position(self):
+
+        available_position_selected = False
+        available_positions_list = self.list_available_positions()
+
+        while not available_position_selected:
+            random_position = random.randint(0, 8)
+
+            if available_positions_list[random_position]:
+                row = random_position // 3
+                column = random_position % 3
+                return row, column
+            else:
+                available_position_selected = False
+
+
+
     def play_move(self, game_interface: GameWindow, player: Player):
         is_move_possible = False
         row, column = None, None
-        while not is_move_possible:
-            x_click, y_click = game_interface.get_user_interaction()
-            row, column = game_interface.get_move_location(x_click, y_click)
-            is_move_possible = self.is_position_available(row, column)
 
+        if not player.is_random:
+            while not is_move_possible:
+                x_click, y_click = game_interface.get_user_interaction()
+                row, column = game_interface.get_move_location(x_click, y_click)
+
+                is_move_possible = self.is_position_available(row, column)
+        else:
+            row, column = self.select_random_position()
+
+        game_interface.get_symbol_coordinates(row, column)
         game_interface.draw_symbol(player.player_number)
         self.board[row][column] = player.player_number
 

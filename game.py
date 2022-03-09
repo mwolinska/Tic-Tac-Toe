@@ -1,3 +1,4 @@
+import random
 from random import randint
 
 import numpy as np
@@ -8,14 +9,15 @@ from game_interface import GameWindow
 from player import Player
 
 class TicTacToe(object):
-    def __init__(self, number_of_players: int = 2):
-        self.number_of_players = number_of_players
+    def __init__(self, number_of_human_players: int = 2, number_of_random_players: int = 0):
+        self.number_of_human_players = number_of_human_players
+        self.number_of_random_players = number_of_random_players
         pass
 
     def change_player(self, current_player_index: int) -> int:
         next_player_index = current_player_index + 1
 
-        if next_player_index == self.number_of_players:
+        if next_player_index == self.number_of_human_players + self.number_of_random_players:
             next_player_index = 0
 
         return next_player_index
@@ -23,8 +25,13 @@ class TicTacToe(object):
     def create_list_of_players(self):
         list_of_players = []
 
-        for i in range(self.number_of_players):
-            list_of_players.append(Player(i+1))
+        for i in range(self.number_of_human_players):
+            list_of_players.append(Player(i+1, False))
+
+        for i in range(self.number_of_random_players):
+            list_of_players.append(Player(i+2, True))
+
+        random.shuffle(list_of_players)
 
         return list_of_players
 
@@ -97,5 +104,5 @@ class TicTacToe(object):
 
 
 if __name__ == '__main__':
-    my_game = TicTacToe()
+    my_game = TicTacToe(1, 1)
     my_game.play_game()
