@@ -1,8 +1,6 @@
 from typing import Optional, Tuple
 
 import pygame
-# from pygame import event
-
 
 class GameWindow(object):
     def __init__(self, width: int = 600, height: int = 600):
@@ -213,8 +211,6 @@ class GameWindow(object):
         elif exit_event.key == pygame.K_n:
             pygame.quit()
             return False
-
-
 
 if __name__ == '__main__':
     game_window = GameWindow(800, 800)
