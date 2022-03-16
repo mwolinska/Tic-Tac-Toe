@@ -30,7 +30,7 @@ cd Tic-Tac-Toe
 
 Run the code as follows:
 ```bash
-python3 main.py
+./play_game
 ```
 An example run would look something like this:
 ```
