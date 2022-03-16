@@ -51,7 +51,16 @@ class GameBoard(object):
             else:
                 available_position_selected = False
 
-
+    def select_best_position(self):
+        current_game_board = self.board.copy()
+        game_outcome_simulation = BoardSimulation(current_game_board)
+        win_probability_matrix = game_outcome_simulation.simulate_possible_games()
+        flat_win_probability_matrix = win_probability_matrix.flatten()
+        possible_move_indexes = np.where(flat_win_probability_matrix == max(flat_win_probability_matrix))
+        random.shuffle(possible_move_indexes)
+        row = possible_move_indexes[0][0] // 3
+        column = possible_move_indexes[0][0] % 3
+        return row, column
 
     def play_move(self, game_interface: GameWindow, player: Player):
         is_move_possible = False
@@ -64,7 +73,8 @@ class GameBoard(object):
 
                 is_move_possible = self.is_position_available(row, column)
         else:
-            row, column = self.select_random_position()
+            row, column = self.select_best_position()
+            print(row, column)
 
         game_interface.get_symbol_coordinates(row, column)
         game_interface.draw_symbol(player.player_number)
