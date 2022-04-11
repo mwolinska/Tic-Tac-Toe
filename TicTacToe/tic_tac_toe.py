@@ -8,7 +8,7 @@ from TicTacToe.board import GameBoard
 from TicTacToe.player import AbstractPlayer
 from TicTacToe.player_human import Player
 from TicTacToe.player_smart import SmartPlayer
-from TicTacToe.utils import Color, Move, Position
+from TicTacToe.utils import Color, Move
 
 
 class TicTacToe(object):
@@ -101,7 +101,6 @@ class TicTacToe(object):
 
         is_over = False
         outcome = None
-        play_again = True
 
         self.game_board.game_visual.print_starting_player(self.player_list[0].player_number)
 

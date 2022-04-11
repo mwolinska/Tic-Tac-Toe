@@ -209,6 +209,3 @@ class GameWindow(object):
 if __name__ == '__main__':
     game_window = GameWindow(800, 800)
     game_window.prepare_board()
-    # game_window.get_user_interaction(1, -1)
-    # game_window.game_outcome(0)
-

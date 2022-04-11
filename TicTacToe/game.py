@@ -1,10 +1,12 @@
 import abc
+
 from enum import Enum
 from typing import List
 
 import numpy as np
 
 from TicTacToe.utils import Move
+from TicTacToe.player import AbstractPlayer
 
 
 class GameStatus(str, Enum):
@@ -18,7 +20,7 @@ class AbstractGame(abc.ABC):
 
     @classmethod
     @abc.abstractmethod
-    def from_existing_board(cls, current_game_board: np.ndarray, player_list: List["AbstractPlayer"]) -> "AbstractGame":
+    def from_existing_board(cls, current_game_board: np.ndarray, player_list: List[AbstractPlayer]) -> "AbstractGame":
         pass
 
     @abc.abstractmethod
@@ -31,5 +33,3 @@ class AbstractGame(abc.ABC):
 
     def has_player_won(self, move: Move):
         pass
-
-
