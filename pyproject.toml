@@ -3,6 +3,9 @@ name = "Tic-Tac-Toe"
 version = "0.1.0"
 description = "This enables the user to play a game of tic tac toe."
 authors = ["Marta <mswolinska@gmail.com>"]
+packages = [
+    { include = "TicTacToe" },
+]
 
 [tool.poetry.dependencies]
 python = ">3.8, <3.10"
@@ -14,3 +17,7 @@ pygame = "^2.1.2"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+play_together = 'TicTacToe.cli:two_player_game'
+play_alone = 'TicTacToe.cli:one_player_game'
