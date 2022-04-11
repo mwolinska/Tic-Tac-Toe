@@ -7,59 +7,28 @@ The game is resolved when a player has 3 unobstructed
 moves in one row or column.
 
 ### Getting started with the package
-To get started clone this repo.
+To get started clone this repo and ensure you are in teh right folder.
 ```bash
 git clone https://github.com/mwolinska/Tic-Tac-Toe
 cd Tic-Tac-Toe
 ```
-Then set up and activate a virtual environment.
+
+Then, simply install all the dependencies using [poetry](https://python-poetry.org).
 ```bash
-python3 -m venv ./venv
-source venv/bin/activate
-```
-Finally, install all the dependencies.
-```bash
-pip3 install -r requirements.txt
+poetry install
 ```
 
 ### Using the package
-First, ensure you are in the right directory.
+You can either play a single player game (against a bot):
 ```bash
-cd Tic-Tac-Toe
+play_alone
 ```
-
-Run the code as follows:
+or a two player game (black makes the first move):
 ```bash
-./play_game
+play_together
 ```
 An example run would look something like this:
-```
-Play position row: 0
-Play position column: 0
-[[1 0 0]
- [0 0 0]
- [0 0 0]]
-Play position row: 2
-Play position column: 2
-[[1 0 0]
- [0 0 0]
- [0 0 2]]
-Play position row: 0
-Play position column: 1
-[[1 1 0]
- [0 0 0]
- [0 0 2]]
-Play position row: 1
-Play position column: 1
-[[1 1 0]
- [0 2 0]
- [0 0 2]]
-Play position row: 0
-Play position column: 2
-[[1 1 1]
- [0 2 0]
- [0 0 2]]
-Player1won the game
-The game has end, do you want to play again? Type Yes / No: No
-Thanks for playing.
-```
+First the game randomly decides who will start the game. 
+Player 1  plays using crosses and Player 2 plays using circles.
+If you opt to use `play_alone` the bot plays as Player 2.
+
