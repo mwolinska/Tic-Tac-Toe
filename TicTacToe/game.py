@@ -82,7 +82,7 @@ class TicTacToe(object):
         while continue_playing:
             board = GameBoard()
             starting_player_index = randint(0, len(player_list) - 1)
-            game_visual.prepare_board()
+
             game_visual.print_starting_player(player_list[starting_player_index].player_number)
 
             is_over = False

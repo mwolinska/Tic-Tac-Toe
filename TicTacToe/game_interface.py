@@ -18,6 +18,7 @@ class GameWindow(object):
         self.x_position_grid_centre = None
         self.x_symbol_centre = None
         self.y_symbol_centre = None
+        self.prepare_board()
 
     def prepare_board(self):
         self.screen.fill((234, 228, 233))
@@ -224,6 +225,6 @@ class GameWindow(object):
 if __name__ == '__main__':
     game_window = GameWindow(800, 800)
     game_window.prepare_board()
-    game_window.get_user_interaction(1, -1)
-    game_window.game_outcome(0)
+    # game_window.get_user_interaction(1, -1)
+    # game_window.game_outcome(0)
 
