@@ -3,8 +3,8 @@ from typing import List
 
 import numpy as np
 
-from TicTacToe.game_interface import GameWindow
-from TicTacToe.utils import PositionIndex, Position, Move
+from TicTacToe.data_model.move import PositionIndex, Move, Position
+from TicTacToe.interface.game_interface import GameWindow
 
 
 class GameBoard(object):

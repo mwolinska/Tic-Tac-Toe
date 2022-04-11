@@ -3,11 +3,11 @@ from itertools import repeat
 from multiprocessing import Pool
 from typing import Optional
 
-from TicTacToe.board import GameBoard
-from TicTacToe.game_simulation import GameSim
-from TicTacToe.player import AbstractPlayer, PotentialMove, PotentialMoves
-from TicTacToe.player_random import RandomPlayer
-from TicTacToe.utils import Color, Move, Position
+from TicTacToe.data_model.move import Color, Move, Position
+from TicTacToe.game.game_simulation import GameSim
+from TicTacToe.interface.board import GameBoard
+from TicTacToe.players.player import AbstractPlayer, PotentialMove, PotentialMoves
+from TicTacToe.players.player_random import RandomPlayer
 
 
 class SmartPlayer(AbstractPlayer):

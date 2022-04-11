@@ -1,12 +1,11 @@
 import abc
-
 from enum import Enum
 from typing import List
 
 import numpy as np
 
-from TicTacToe.utils import Move
-from TicTacToe.player import AbstractPlayer
+from TicTacToe.data_model.move import Move
+from TicTacToe.players.player import AbstractPlayer
 
 
 class GameStatus(str, Enum):

@@ -1,8 +1,8 @@
 from typing import Optional
 
-from TicTacToe.board import GameBoard
-from TicTacToe.player import AbstractPlayer
-from TicTacToe.utils import Color, Move
+from TicTacToe.data_model.move import Color, Move
+from TicTacToe.interface.board import GameBoard
+from TicTacToe.players.player import AbstractPlayer
 
 
 class Player(AbstractPlayer):

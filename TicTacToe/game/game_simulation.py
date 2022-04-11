@@ -4,9 +4,9 @@ from typing import Optional
 
 import numpy as np
 
-from TicTacToe.board import GameBoard
-from TicTacToe.game import AbstractGame, GameStatus
-from TicTacToe.utils import Move, Position
+from TicTacToe.data_model.move import Move, Position
+from TicTacToe.game.game import AbstractGame, GameStatus
+from TicTacToe.interface.board import GameBoard
 
 
 class GameSim(AbstractGame):

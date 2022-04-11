@@ -1,8 +1,8 @@
 import random
 
-from TicTacToe.board import GameBoard
-from TicTacToe.player import AbstractPlayer
-from TicTacToe.utils import Color, Position, Move
+from TicTacToe.data_model.move import Color, Position, Move
+from TicTacToe.interface.board import GameBoard
+from TicTacToe.players.player import AbstractPlayer
 
 
 class RandomPlayer(AbstractPlayer):

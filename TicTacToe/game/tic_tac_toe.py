@@ -4,11 +4,11 @@ from typing import Tuple, Optional, List
 
 import numpy as np
 
-from TicTacToe.board import GameBoard
-from TicTacToe.player import AbstractPlayer
-from TicTacToe.player_human import Player
-from TicTacToe.player_smart import SmartPlayer
-from TicTacToe.utils import Color, Move
+from TicTacToe.data_model.move import Color, Move
+from TicTacToe.interface.board import GameBoard
+from TicTacToe.players.player import AbstractPlayer
+from TicTacToe.players.player_human import Player
+from TicTacToe.players.player_smart import SmartPlayer
 
 
 class TicTacToe(object):

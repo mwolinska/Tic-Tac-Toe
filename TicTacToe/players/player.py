@@ -3,8 +3,8 @@ import dataclasses
 from dataclasses import dataclass
 from typing import List
 
-from TicTacToe.board import GameBoard
-from TicTacToe.utils import Position, Move
+from TicTacToe.data_model.move import Position, Move
+from TicTacToe.interface.board import GameBoard
 
 
 @dataclass
