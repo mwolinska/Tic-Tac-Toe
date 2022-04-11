@@ -12,7 +12,6 @@ class TicTacToe(object):
     def __init__(self, number_of_human_players: int = 2, number_of_random_players: int = 0):
         self.number_of_human_players = number_of_human_players
         self.number_of_random_players = number_of_random_players
-        pass
 
     def change_player(self, current_player_index: int) -> int:
         next_player_index = current_player_index + 1
