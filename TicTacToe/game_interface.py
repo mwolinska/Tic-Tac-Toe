@@ -1,6 +1,7 @@
-from typing import Optional, Tuple
+from typing import Tuple
 
 import pygame
+
 
 class GameWindow(object):
     def __init__(self, width: int = 600, height: int = 600):
@@ -18,6 +19,7 @@ class GameWindow(object):
         self.x_position_grid_centre = None
         self.x_symbol_centre = None
         self.y_symbol_centre = None
+        self.prepare_board()
 
     def prepare_board(self):
         self.screen.fill((234, 228, 233))
@@ -172,23 +174,6 @@ class GameWindow(object):
     def connect_winning_points(self):
         pass
 
-    def test(self):
-        running = True
-        while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-                    pygame.quit()
-            my_font = pygame.font.SysFont("menlo", 36)
-            text_img = my_font.render(" has won", True, (0, 128, 0))
-            rect_placement_adjust = 0.1 * self.height
-            pygame.draw.rect(self.screen,
-                             (0, 0, 255),
-                             (0, self.height / 2 - rect_placement_adjust, self.width, rect_placement_adjust * 2),
-                             0)
-            self.screen.blit(text_img, ((self.width - text_img.get_size()[0])/2,  (self.height - text_img.get_size()[1])/2))
-            pygame.display.flip()
-
     def play_again(self):
         exit_event = None
         running = True
@@ -224,6 +209,6 @@ class GameWindow(object):
 if __name__ == '__main__':
     game_window = GameWindow(800, 800)
     game_window.prepare_board()
-    game_window.get_user_interaction(1, -1)
-    game_window.game_outcome(0)
+    # game_window.get_user_interaction(1, -1)
+    # game_window.game_outcome(0)
 

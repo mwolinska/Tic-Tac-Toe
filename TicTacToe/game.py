@@ -1,12 +1,13 @@
 import random
 from random import randint
+from typing import Tuple
 
 import numpy as np
-from typing import Tuple
 
 from TicTacToe.board import GameBoard
 from TicTacToe.game_interface import GameWindow
 from TicTacToe.player import Player
+
 
 class TicTacToe(object):
     def __init__(self, number_of_human_players: int = 2, number_of_random_players: int = 0):
@@ -82,7 +83,7 @@ class TicTacToe(object):
         while continue_playing:
             board = GameBoard()
             starting_player_index = randint(0, len(player_list) - 1)
-            game_visual.prepare_board()
+
             game_visual.print_starting_player(player_list[starting_player_index].player_number)
 
             is_over = False
