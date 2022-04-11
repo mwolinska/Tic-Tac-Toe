@@ -1,10 +1,10 @@
 import random
 import time
-from itertools import permutations
-from typing import List, Tuple
+from typing import List
 
 import numpy as np
 
+from TicTacToe.board_simulation import BoardSimulation
 from TicTacToe.game_interface import GameWindow
 from TicTacToe.player import Player
 

@@ -1,12 +1,13 @@
 import random
 from random import randint
+from typing import Tuple
 
 import numpy as np
-from typing import Tuple
 
 from TicTacToe.board import GameBoard
 from TicTacToe.game_interface import GameWindow
 from TicTacToe.player import Player
+
 
 class TicTacToe(object):
     def __init__(self, number_of_human_players: int = 2, number_of_random_players: int = 0):

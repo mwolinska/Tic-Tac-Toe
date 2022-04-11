@@ -1,3 +1,6 @@
+from itertools import permutations
+from typing import List, Tuple
+
 import numpy as np
 
 
@@ -23,7 +26,6 @@ class BoardSimulation(object):
             row = first_move[0]
             column = first_move[1]
             self.board[row][column] = self.player_number
-            # opponent_win_in_one_move = False
 
             interim_board = self.board.copy()
 
@@ -37,8 +39,6 @@ class BoardSimulation(object):
                     score_for_move += self.get_game_outcome_score()
                 self.board = interim_board.copy()
 
-            # if opponent_win_in_one_move:
-            #     win_probability_array[row][column] = 1
             else:
                 win_probability_array[row][column] = score_for_move / len(all_sequences)
             self.board = starting_board.copy()
