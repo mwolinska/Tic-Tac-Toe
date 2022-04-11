@@ -1,103 +1,35 @@
-import random
-from random import randint
-from typing import Tuple
+import abc
+from enum import Enum
+from typing import List
 
 import numpy as np
 
-from TicTacToe.board import GameBoard
-from TicTacToe.game_interface import GameWindow
-from TicTacToe.player import Player
+from TicTacToe.utils import Move
 
 
-class TicTacToe(object):
-    def __init__(self, number_of_human_players: int = 2, number_of_random_players: int = 0):
-        self.number_of_human_players = number_of_human_players
-        self.number_of_random_players = number_of_random_players
+class GameStatus(str, Enum):
+    win = "win"
+    loss = "loss"
+    draw = "draw"
+    ongoing = "ongoing"
 
-    def change_player(self, current_player_index: int) -> int:
-        next_player_index = current_player_index + 1
 
-        if next_player_index == self.number_of_human_players + self.number_of_random_players:
-            next_player_index = 0
+class AbstractGame(abc.ABC):
 
-        return next_player_index
+    @classmethod
+    @abc.abstractmethod
+    def from_existing_board(cls, current_game_board: np.ndarray, player_list: List["AbstractPlayer"]) -> "AbstractGame":
+        pass
 
-    def create_list_of_players(self):
-        list_of_players = []
-
-        for i in range(self.number_of_human_players):
-            list_of_players.append(Player(i+1, False))
-
-        for i in range(self.number_of_random_players):
-            list_of_players.append(Player(i+2, True))
-
-        random.shuffle(list_of_players)
-
-        return list_of_players
-
-    def has_player_won(self, board: GameBoard, player: Player) -> bool:
-        is_win_mask = board.board == player.player_number
-
-        for i in range(3):
-            # is there a win in each row?
-            if np.all(is_win_mask[:, i]):
-                print("Player " + str(player.player_number) + " has won the game")
-                return True
-            # is there a win in each column?
-            elif np.all(is_win_mask[i, :]):
-                print("Player " + str(player.player_number) + " has won the game")
-                return True
-        # Check if there is a win across the diagonals
-        if is_win_mask[0][0] == is_win_mask[1][1] == is_win_mask[2][2] == True:
-            return True
-        elif is_win_mask[2][0] == is_win_mask[1][1] == is_win_mask[0][2] == True:
-            return True
-
-        return False
-
-    def is_game_draw(self, board: GameBoard) -> bool:
-        if sum(board.list_available_positions()) == 0:
-            print("The game is over, this is a draw")
-            return True
-        else:
-            return False
-
-    def is_game_over(self, board: GameBoard, player: Player) -> Tuple[bool, str]:
-
-        if self.has_player_won(board, player):
-            outcome_string = "Player " + str(player.player_number) + " won the game"
-            return True, outcome_string
-        else:
-            if self.is_game_draw(board):
-                outcome_string = "This game is a draw"
-                return True, outcome_string
-            else:
-                outcome_string = "The game continues"
-                return False, outcome_string
-
+    @abc.abstractmethod
     def play_game(self):
-        game_visual = GameWindow()
-        player_list = self.create_list_of_players()
-        continue_playing = True
+        pass
 
-        while continue_playing:
-            board = GameBoard()
-            starting_player_index = randint(0, len(player_list) - 1)
+    @abc.abstractmethod
+    def get_game_status(self, move: Move) -> GameStatus:
+        pass
 
-            game_visual.print_starting_player(player_list[starting_player_index].player_number)
+    def has_player_won(self, move: Move):
+        pass
 
-            is_over = False
-            outcome = None
 
-            player_making_move_index = starting_player_index
-            player_making_move = player_list[player_making_move_index]
-
-            while not is_over:
-                board.play_move(game_visual, player_making_move)
-                is_over, outcome = self.is_game_over(board, player_making_move)
-
-                player_making_move_index = self.change_player(player_making_move_index)
-                player_making_move = player_list[player_making_move_index]
-
-            game_visual.game_outcome(outcome)
-            continue_playing = game_visual.play_again()
