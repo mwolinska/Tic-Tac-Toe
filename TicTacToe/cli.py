@@ -1,14 +1,11 @@
-import TicTacToe
+import os
+
 
 def one_player_game():
-    my_game = TicTacToe.TicTacToe(
-        number_of_human_players=1,
-        number_of_random_players=1,
-    )
-    my_game.play_game()
+    os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "True"
+    from TicTacToe.tic_tac_toe import single_player_game_main
+    single_player_game_main()
 
 def two_player_game():
-    my_game = TicTacToe.TicTacToe(
-        number_of_human_players=2,
-    )
-    my_game.play_game()
+    from TicTacToe.tic_tac_toe import two_player_game_main
+    two_player_game_main()
