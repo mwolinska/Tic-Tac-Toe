@@ -1,146 +1,134 @@
-from typing import Tuple
+from typing import Optional
 
+import numpy as np
 import pygame
+
+from TicTacToe.utils import Position, Color, find_index_of_closest_value, Click, Move
 
 
 class GameWindow(object):
-    def __init__(self, width: int = 600, height: int = 600):
-        self.y_position_grid_centre = None
+    def __init__(self, width: int = 600,
+                 height: int = 600,
+                 n_columns: int = 3,
+                 n_rows: int = 3,
+                 ):
+
         pygame.init()
 
         self.width = width
         self.height = height
+        self.n_columns = n_columns
+        self.n_rows = n_rows
+        self.symbol_size = None
+        self.vertical_line_position_list = []
+        self.horizontal_line_position_list = []
 
         self.screen = pygame.display.set_mode([self.width, self.height])
 
-        self.symbol_size = None
-        self.vertical_lines = None
-        self.horizontal_lines = None
-        self.x_position_grid_centre = None
-        self.x_symbol_centre = None
-        self.y_symbol_centre = None
         self.prepare_board()
+
+    @classmethod
+    def from_existing_board(cls, current_board: np.ndarray):
+        visual = cls()
+        for row_number in range(current_board.shape[0]):
+            for column_number in range(current_board[row_number].shape[0]):
+                if current_board[row_number][column_number] != 0:
+                    if current_board[row_number][column_number] == 1:
+                        stone_color = pygame.Color(132, 165, 157)
+                    else:
+                        stone_color = Color(242, 132, 130)
+                    test_position = Move(Position(row_number, column_number), stone_color)
+                    visual.draw_symbol(test_position, stone_color)
 
     def prepare_board(self):
         self.screen.fill((234, 228, 233))
-        width_adjust = 0.05 * self.width
-        height_adjust = 0.05 * self.height
+        horizontal_margin = 0.05 * self.width
+        vertical_margin = 0.05 * self.height
+        board_width = self.width - 2 * horizontal_margin
+        board_height = self.height - 2 * vertical_margin
 
-        self.symbol_size = 0.22 * self.width / 3
-        self.vertical_lines = []
-        self.horizontal_lines = []
+        column_width = board_width / self.n_columns
+        row_width = board_height / self.n_rows
 
-        for i in range(1, 3):
-            start_pos = (i * self.width / 3, height_adjust)
-            end_pos = (i * self.width / 3, self.height - height_adjust)
-            pygame.draw.line(self.screen, (0, 0, 0), start_pos, end_pos)
-            self.vertical_lines.append(start_pos[0])
+        self.symbol_size = 0.25 * board_width / min(self.n_rows, self.n_columns)
 
-        self.x_position_grid_centre = (self.vertical_lines[1] - self.vertical_lines[0]) / 2
+        # draw vertical lines. This corresponds to x values
+        for i in range(self.n_columns):
 
-        for i in range(1, 3):
-            start_pos = (width_adjust, i * self.height / 3)
-            end_pos = (self.width - width_adjust, i * self.height / 3)
-            pygame.draw.line(self.screen, (0, 0, 0), start_pos, end_pos)
-            self.horizontal_lines.append(start_pos[1])
+            start_pos = (horizontal_margin + i * column_width, vertical_margin)
+            end_pos = (horizontal_margin + i * column_width, self.height - vertical_margin)
+            if i != 0:
+                pygame.draw.line(self.screen, (0, 0, 0), start_pos, end_pos)
+            self.vertical_line_position_list.append(start_pos[0] + column_width / 2)
 
-        self.y_position_grid_centre = (self.horizontal_lines[1] - self.horizontal_lines[0]) / 2
+        for i in range(self.n_rows):
+            start_pos = (horizontal_margin, vertical_margin + i * row_width)
+            end_pos = (self.width - horizontal_margin, vertical_margin + i * row_width)
+            if i != 0:
+                pygame.draw.line(self.screen, (0, 0, 0), start_pos, end_pos)
+            self.horizontal_line_position_list.append(start_pos[1] + row_width / 2)
+
         pygame.display.flip()
 
     def print_starting_player(self, player_number):
-        welcome_string = "Player " + str(player_number) + " will start the game"
-        my_font = pygame.font.SysFont("menlo", 30)
-        text_img = my_font.render(welcome_string, True, (0, 0, 0))
-        rect_placement_adjust = 0.1 * self.height
-        pygame.draw.rect(self.screen,
-                         (245, 202, 195),
-                         (0, self.height / 2 - rect_placement_adjust, self.width, rect_placement_adjust * 2),
-                         0)
-        self.screen.blit(text_img,
-                         ((self.width - text_img.get_size()[0]) / 2, (self.height - text_img.get_size()[1]) / 2))
-        pygame.display.flip()
         running = True
         while running:
+            welcome_string = "Player " + str(player_number) + " will start the game"
+            my_font = pygame.font.SysFont("menlo", 30)
+            text_img = my_font.render(welcome_string, True, (0, 0, 0))
+            rect_placement_adjust = 0.1 * self.height
+            pygame.draw.rect(self.screen,
+                             (245, 202, 195),
+                             (0, self.height / 2 - rect_placement_adjust, self.width, rect_placement_adjust * 2),
+                             0)
+            self.screen.blit(text_img,
+                             ((self.width - text_img.get_size()[0]) / 2, (self.height - text_img.get_size()[1]) / 2))
+            pygame.display.flip()
 
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     running = False
                     self.prepare_board()
-                elif event.type == pygame.QUIT:
-                    running = False
-                    pygame.quit()
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == 27:
-                        running = False
-                        pygame.quit()
 
-    def get_user_interaction(self):
+    @staticmethod
+    def get_user_interaction() -> Optional[Click]:
         running = True
         while running:
 
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+                if (event.type == pygame.QUIT) or ((event.type == pygame.KEYDOWN) and (event.key == pygame.K_ESCAPE)):
                     running = False
-                    pygame.quit()
-
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == 27:
-                        running = False
-                        pygame.quit()
-
-                    else:
-                        print(event.key)
 
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    return event.pos[0], event.pos[1]
+                    return Click(event.pos[0], event.pos[1])
 
-    def get_move_location(self, click_x, click_y) -> Tuple[int, int]:
+        pygame.quit()
+        return None
 
-        if click_x < self.vertical_lines[0]:
-            column = 0
+    def translate_user_click_to_coords(self, user_click: Click) -> Position:
+        column = find_index_of_closest_value(user_click.x, self.vertical_line_position_list)
+        row = find_index_of_closest_value(user_click.y, self.horizontal_line_position_list)
+        move_address = Position(row, column)
+        return move_address
 
-        elif self.vertical_lines[0] < click_x < self.vertical_lines[1]:
-            column = 1
-        else:
-            column = 2
+    def draw_symbol(self, move_location: Move, color: Color):
+        # there is a difference between the row and column within the GameBoard and GameVisualisation.
+        # The Position row and column reflect the logic of a numpy array.
+        # row corresponds to the y coordinates of the Game Visualisation
+        # column corresponds to the x coordinates of the game visualisation
 
-        if click_y < self.horizontal_lines[0]:
-            row = 0
-        elif self.horizontal_lines[0] < click_y < self.horizontal_lines[1]:
-            row = 1
-        else:
-            row = 2
-
-        return row, column
-
-    def get_symbol_coordinates(self, row, column):
-        if column == 0:
-            self.x_symbol_centre = self.vertical_lines[0] - self.x_position_grid_centre
-        elif column == 1:
-            self.x_symbol_centre = self.vertical_lines[1] - self.x_position_grid_centre
-        elif column == 2:
-            self.x_symbol_centre = self.vertical_lines[1] + self.x_position_grid_centre
-
-        if row == 0:
-            self.y_symbol_centre = self.horizontal_lines[0] - self.y_position_grid_centre
-        elif row == 1:
-            self.y_symbol_centre = self.horizontal_lines[1] - self.y_position_grid_centre
-        elif row == 2:
-            self.y_symbol_centre = self.horizontal_lines[1] + self.y_position_grid_centre
-
-    def draw_symbol(self, player_number):
-        if player_number == 1:
-            self.draw_cross(self.x_symbol_centre, self.y_symbol_centre)
-        elif player_number == 2:
+        if move_location.player_number == 1:
+            self.draw_cross(self.vertical_line_position_list[move_location.position.column], self.vertical_line_position_list[move_location.position.row])
+        elif move_location.player_number == 2:
             pygame.draw.circle(self.screen,
-                               (242, 132, 130),
-                               (self.x_symbol_centre, self.y_symbol_centre),
+                               color.rgb,
+                               (self.vertical_line_position_list[move_location.position.column], self.vertical_line_position_list[move_location.position.row]),
                                self.symbol_size,
                                5)
         pygame.display.flip()
 
     def draw_cross(self, x, y):
-        cross_radius = 0.2 * self.width / 3
+        cross_radius = self.symbol_size * 0.8
 
         pygame.draw.line(self.screen,
                          (132, 165, 157),
@@ -164,18 +152,13 @@ class GameWindow(object):
             self.screen.blit(text_img, ((self.width - text_img.get_size()[0])/2,  (self.height - text_img.get_size()[1])/2))
             pygame.display.flip()
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+                if event.type == pygame.MOUSEBUTTONDOWN:
                     running = False
-                    pygame.quit()
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    running = False
-                    self.play_again()
 
     def connect_winning_points(self):
         pass
 
     def play_again(self):
-        exit_event = None
         running = True
         while running:
             check_string = "Do you want to play again? Press y or n"
@@ -190,25 +173,9 @@ class GameWindow(object):
                              ((self.width - text_img.get_size()[0]) / 2, (self.height - text_img.get_size()[1]) / 2))
             pygame.display.flip()
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-                    pygame.quit()
-                elif event.type == pygame.KEYDOWN:
-                    if (event.key == pygame.K_y) or (event.key == pygame.K_n):
-                        exit_event = event
-                        running = False
-
-        if exit_event.key == pygame.K_y:
-            self.prepare_board()
-            return True
-
-        elif exit_event.key == pygame.K_n:
-            pygame.quit()
-            return False
-
-if __name__ == '__main__':
-    game_window = GameWindow(800, 800)
-    game_window.prepare_board()
-    # game_window.get_user_interaction(1, -1)
-    # game_window.game_outcome(0)
-
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_y:
+                        return True
+                    elif event.key == pygame.K_n:
+                        pygame.quit()
+                        return False

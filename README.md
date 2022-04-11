@@ -39,7 +39,7 @@ The user should click to start the game and then a clean board is displayed.
 <img src="./Images/GameScreenshots/clean_board.png" height="250">
 
 The first player makes their move (in this case Player 2 - circle) 
-by clicking in teh desired location:
+by clicking in the desired location:
 
 <img src="./Images/GameScreenshots/first_move.png" height="250">
 
